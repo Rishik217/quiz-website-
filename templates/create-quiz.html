@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz - Quiz Master</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .create-quiz-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .quiz-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .category-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        .category-card.selected {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        .category-card i {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .category-card h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .category-card p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .questions-container {
+            margin-top: 30px;
+        }
+        
+        .question-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .question-card .remove-question {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .options-container {
+            margin-top: 15px;
+        }
+        
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .option-row input[type="text"] {
+            flex: 1;
+        }
+
+        .option-row input[type="radio"] {
+            margin: 0;
+        }
+        
+        .add-option-btn {
+            background: none;
+            border: none;
+            color: #4CAF50;
+            cursor: pointer;
+            padding: 5px 0;
+            font-size: 14px;
+        }
+        
+        .add-question-btn {
+            width: 100%;
+            padding: 15px;
+            background: #e8f5e9;
+            border: 2px dashed #4CAF50;
+            border-radius: 8px;
+            color: #4CAF50;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .add-question-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .preview-title {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='quiz-home.html'" style="cursor: pointer;">
+                <i class="fas fa-brain"></i>
+                <span>Quiz Master</span>
+            </div>
+            <div class="header-buttons">
+                <button onclick="location.href='quiz-home.html'" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="create-quiz-container">
+        <div class="quiz-form">
+            <h2><i class="fas fa-plus-circle"></i> Create New Quiz</h2>
+            
+                    <div class="form-group">
+                        <label for="quizTitle">Quiz Title</label>
+                <input type="text" id="quizTitle" placeholder="Enter quiz title">
+            </div>
+
+            <div class="form-group">
+                <label for="quizDescription">Description</label>
+                <textarea id="quizDescription" placeholder="Enter quiz description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="quizDuration">Duration (minutes)</label>
+                <input type="number" id="quizDuration" min="1" value="30">
+            </div>
+
+            <div class="form-group">
+                <label>Select Question Categories</label>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="toggleCategory('multiple-choice')">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>Multiple Choice</h3>
+                        <p>Questions with multiple options</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('programming')">
+                        <i class="fas fa-code"></i>
+                        <h3>Programming</h3>
+                        <p>Code-based questions</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('fill-blanks')">
+                        <i class="fas fa-pencil-alt"></i>
+                        <h3>Fill in the Blanks</h3>
+                        <p>Complete the sentence</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('matching')">
+                        <i class="fas fa-random"></i>
+                        <h3>Match the Following</h3>
+                        <p>Match items from two columns</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('true-false')">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>True or False</h3>
+                        <p>Simple true/false questions</p>
+                    </div>
+                    </div>
+                </div>
+                
+            <div class="questions-container" id="questionsContainer">
+                <!-- Questions will be added here -->
+                    </div>
+                    
+            <button onclick="addQuestion()" class="add-question-btn">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+
+            <div class="form-actions">
+                <button onclick="previewQuiz()" class="btn btn-secondary">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button onclick="saveQuiz()" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Quiz
+                </button>
+                </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let selectedCategories = new Set();
+
+        function toggleCategory(category) {
+            const card = event.currentTarget;
+            if (selectedCategories.has(category)) {
+                selectedCategories.delete(category);
+                card.classList.remove('selected');
+            } else {
+                selectedCategories.add(category);
+                card.classList.add('selected');
+            }
+        }
+
+        function addQuestion() {
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            const questionId = Date.now();
+            
+            questionCard.innerHTML = `
+                <button class="remove-question" onclick="removeQuestion(${questionId})">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <input type="text" placeholder="Enter your question" onchange="updateQuestion(${questionId}, 'text', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Question Type</label>
+                    <select onchange="updateQuestionType(${questionId}, this.value)">
+                        <option value="multiple-choice">Multiple Choice</option>
+                        <option value="programming">Programming</option>
+                        <option value="fill-blanks">Fill in the Blanks</option>
+                        <option value="matching">Match the Following</option>
+                        <option value="true-false">True or False</option>
+                    </select>
+                </div>
+                <div class="options-container" id="options-${questionId}">
+                    <!-- Options will be added based on question type -->
+                </div>
+            `;
+            
+            document.getElementById('questionsContainer').appendChild(questionCard);
+            
+            questions.push({
+                id: questionId,
+                text: '',
+                type: 'multiple-choice',
+                options: [],
+                correctAnswer: null
+            });
+
+            updateQuestionOptions(questionId, 'multiple-choice');
+        }
+
+        function updateQuestionType(questionId, type) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.type = type;
+                updateQuestionOptions(questionId, type);
+            }
+        }
+
+        function updateQuestionOptions(questionId, type) {
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            optionsContainer.innerHTML = '';
+
+            switch(type) {
+                case 'multiple-choice':
+                    optionsContainer.innerHTML = `
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionId}" onchange="setCorrectOption(${questionId}, 0)">
+                            <input type="text" placeholder="Option 1" onchange="updateOption(${questionId}, 0, this.value)">
+                        </div>
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionId}" onchange="setCorrectOption(${questionId}, 1)">
+                            <input type="text" placeholder="Option 2" onchange="updateOption(${questionId}, 1, this.value)">
+                        </div>
+                        <button class="add-option-btn" onclick="addOption(${questionId})">
+                            <i class="fas fa-plus"></i> Add Option
+                        </button>
+                    `;
+                    break;
+                case 'programming':
+                    optionsContainer.innerHTML = `
+                        <div class="form-group">
+                            <label>Code Template</label>
+                            <textarea placeholder="Enter code template" onchange="updateCodeTemplate(${questionId}, this.value)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Expected Output</label>
+                            <textarea placeholder="Enter expected output" onchange="updateExpectedOutput(${questionId}, this.value)"></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'fill-blanks':
+                    optionsContainer.innerHTML = `
+                        <div class="form-group">
+                            <label>Correct Answer</label>
+                            <input type="text" placeholder="Enter correct answer" onchange="updateCorrectAnswer(${questionId}, this.value)">
+                        </div>
+                    `;
+                    break;
+                case 'matching':
+                    optionsContainer.innerHTML = `
+                        <div class="form-group">
+                            <label>Left Column Items</label>
+                            <textarea placeholder="Enter items (one per line)" onchange="updateLeftColumn(${questionId}, this.value)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Right Column Items</label>
+                            <textarea placeholder="Enter items (one per line)" onchange="updateRightColumn(${questionId}, this.value)"></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'true-false':
+                    optionsContainer.innerHTML = `
+                        <div class="form-group">
+                            <label>Correct Answer</label>
+                            <select onchange="updateCorrectAnswer(${questionId}, this.value)">
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        function removeQuestion(questionId) {
+            const card = document.querySelector(`.question-card:has([onchange*="${questionId}"])`);
+            card.remove();
+            questions = questions.filter(q => q.id !== questionId);
+        }
+
+        function addOption(questionId) {
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            const optionIndex = optionsContainer.children.length - 1; // Subtract 1 for the add button
+            
+            const optionRow = document.createElement('div');
+            optionRow.className = 'option-row';
+            optionRow.innerHTML = `
+                <input type="radio" name="correct-${questionId}" onchange="setCorrectOption(${questionId}, ${optionIndex})">
+                <input type="text" placeholder="Option ${optionIndex + 1}" onchange="updateOption(${questionId}, ${optionIndex}, this.value)">
+            `;
+            
+            optionsContainer.insertBefore(optionRow, optionsContainer.lastElementChild);
+            
+            const question = questions.find(q => q.id === questionId);
+            question.options.push('');
+        }
+
+        function updateQuestion(questionId, field, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question[field] = value;
+            }
+        }
+
+        function updateOption(questionId, optionIndex, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.options[optionIndex] = value;
+            }
+        }
+
+        function setCorrectOption(questionId, optionIndex) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.correctAnswer = optionIndex;
+            }
+        }
+
+        function updateCodeTemplate(questionId, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.codeTemplate = value;
+            }
+        }
+
+        function updateExpectedOutput(questionId, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.expectedOutput = value;
+            }
+        }
+
+        function updateCorrectAnswer(questionId, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.correctAnswer = value;
+            }
+        }
+
+        function updateLeftColumn(questionId, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.leftColumn = value.split('\n').filter(item => item.trim());
+            }
+        }
+
+        function updateRightColumn(questionId, value) {
+            const question = questions.find(q => q.id === questionId);
+            if (question) {
+                question.rightColumn = value.split('\n').filter(item => item.trim());
+            }
+        }
+
+        function saveQuiz() {
+            const quiz = {
+                title: document.getElementById('quizTitle').value,
+                description: document.getElementById('quizDescription').value,
+                duration: document.getElementById('quizDuration').value,
+                categories: Array.from(selectedCategories),
+                questions: questions,
+                createdAt: new Date().toISOString()
+            };
+            
+            // In a real application, send this data to your backend
+            console.log('Saving quiz:', quiz);
+            
+            // Redirect to quiz list
+            window.location.href = 'quiz-home.html';
+        }
+
+        function previewQuiz() {
+            const quiz = {
+                title: document.getElementById('quizTitle').value,
+                description: document.getElementById('quizDescription').value,
+                duration: document.getElementById('quizDuration').value,
+                categories: Array.from(selectedCategories),
+                questions: questions
+            };
+
+            // Store quiz data for preview
+            localStorage.setItem('previewQuiz', JSON.stringify(quiz));
+            window.location.href = 'quiz-preview.html';
+        }
+
+        // Add initial question
+        addQuestion();
+    </script>
+</body>
+</html> 

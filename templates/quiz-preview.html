@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Preview - Quiz Master</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .preview-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .meta-item i {
+            color: #4CAF50;
+        }
+
+        .question-preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .preview-note {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='quiz-home.html'" style="cursor: pointer;">
+                <i class="fas fa-brain"></i>
+                <span>Quiz Master</span>
+            </div>
+            <div class="header-buttons">
+                <button onclick="location.href='quiz-home.html'" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="preview-container">
+            <div class="quiz-header">
+                <h1 id="quizTitle">Quiz Title</h1>
+                <p id="quizDescription">Quiz description will appear here.</p>
+            </div>
+
+            <div class="quiz-meta">
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="duration">30 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span id="questionCount">10 questions</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-users"></i>
+                    <span id="attempts">0 attempts</span>
+                </div>
+            </div>
+
+            <div class="preview-note">
+                <p>This is a preview of the quiz. Questions will be randomly ordered when you start.</p>
+            </div>
+
+            <div id="questionPreview" class="question-preview">
+                <!-- Sample question preview will be shown here -->
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="startQuiz()" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Start Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            loadQuizPreview();
+        });
+
+        function loadQuizPreview() {
+            const quizId = localStorage.getItem('previewQuiz');
+            // In a real application, fetch quiz details from your backend
+            const quiz = {
+                title: 'Sample Quiz',
+                description: 'This is a sample quiz description. The actual quiz will contain multiple questions testing your knowledge.',
+                duration: 30,
+                questionCount: 10,
+                attempts: 25,
+                sampleQuestion: {
+                    text: 'What is the capital of France?',
+                    options: ['London', 'Berlin', 'Paris', 'Madrid']
+                }
+            };
+
+            document.getElementById('quizTitle').textContent = quiz.title;
+            document.getElementById('quizDescription').textContent = quiz.description;
+            document.getElementById('duration').textContent = `${quiz.duration} minutes`;
+            document.getElementById('questionCount').textContent = `${quiz.questionCount} questions`;
+            document.getElementById('attempts').textContent = `${quiz.attempts} attempts`;
+
+            // Show sample question
+            const questionHtml = `
+                <h3>Sample Question:</h3>
+                <p>${quiz.sampleQuestion.text}</p>
+                <div class="options">
+                    ${quiz.sampleQuestion.options.map(option => `
+                        <div class="option">
+                            <input type="radio" name="sample" disabled>
+                            <label>${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('questionPreview').innerHTML = questionHtml;
+        }
+
+        function startQuiz() {
+            const quizId = localStorage.getItem('previewQuiz');
+            localStorage.setItem('currentQuiz', quizId);
+            window.location.href = 'take-quiz.html';
+        }
+    </script>
+</body>
+</html> 

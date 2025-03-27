@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz - Quiz Master</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .quiz-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .question-number {
+            font-size: 18px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: #4CAF50;
+            background: #f0f9f0;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .option label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .question-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .question-nav button {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .question-nav button:hover {
+            background: #f0f9f0;
+            border-color: #4CAF50;
+        }
+
+        .question-nav button.current {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .question-nav button.answered {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Quiz Master</span>
+            </div>
+            <div class="header-buttons">
+                <a href="quiz.html" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Exit Quiz
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="timer">
+        Time Remaining: <span id="time">30:00</span>
+    </div>
+
+    <div class="container">
+        <div class="quiz-container">
+            <h2>Python Basics Quiz</h2>
+            <div class="question-container">
+                <div class="question-number">Question 1 of 20</div>
+                <div class="question-text">What is the output of print(type(5))?</div>
+                <div class="options-container">
+                    <div class="option">
+                        <input type="radio" name="answer" id="option1" value="1">
+                        <label for="option1">&lt;class 'int'&gt;</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="answer" id="option2" value="2">
+                        <label for="option2">&lt;class 'str'&gt;</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="answer" id="option3" value="3">
+                        <label for="option3">integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="answer" id="option4" value="4">
+                        <label for="option4">number</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" disabled>Previous</button>
+                <div class="question-nav">
+                    <button class="current">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>4</button>
+                    <button>5</button>
+                    <button>6</button>
+                    <button>7</button>
+                    <button>8</button>
+                    <button>9</button>
+                    <button>10</button>
+                </div>
+                <button class="btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <form id="submitForm" action="quiz.html" method="GET" style="display: none;">
+        <input type="hidden" name="completed" value="true">
+    </form>
+</body>
+</html>

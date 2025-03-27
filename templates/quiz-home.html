@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Home - Quiz Master</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .quiz-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .quiz-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-creator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .creator-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #4CAF50;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='quiz-home.html'" style="cursor: pointer;">
+                <i class="fas fa-brain"></i>
+                <span>Quiz Master</span>
+            </div>
+            <div class="header-buttons">
+                <button onclick="location.href='attempted-quizzes.html'" class="btn btn-secondary">
+                    <i class="fas fa-history"></i> My Attempts
+                </button>
+                <button onclick="location.href='create-quiz.html'" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-container">
+            <div class="search-section">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i> Find Quizzes
+                </h2>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search for quizzes or quiz creators..." id="searchInput">
+                    <button class="btn btn-primary" onclick="searchQuizzes()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('all')">All Quizzes</div>
+                    <div class="tab" onclick="switchTab('popular')">Popular</div>
+                    <div class="tab" onclick="switchTab('recent')">Recent</div>
+                </div>
+            </div>
+
+            <div id="quizContainer" class="quiz-grid">
+                <!-- Quiz cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load quizzes when the page loads
+        window.addEventListener('load', function() {
+            loadQuizzes();
+        });
+
+        function searchQuizzes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            loadQuizzes(searchTerm);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            loadQuizzes(null, tab);
+        }
+
+        function loadQuizzes(searchTerm = '', tab = 'all') {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = ''; // Clear existing quizzes
+
+            // Get quizzes from localStorage or your backend API
+            const quizzes = getQuizzes();
+            let filteredQuizzes = quizzes;
+
+            // Filter quizzes based on search term
+            if (searchTerm) {
+                filteredQuizzes = quizzes.filter(quiz => 
+                    quiz.title.toLowerCase().includes(searchTerm) ||
+                    quiz.creator.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Sort based on selected tab
+            switch(tab) {
+                case 'popular':
+                    filteredQuizzes.sort((a, b) => b.attempts - a.attempts);
+                    break;
+                case 'recent':
+                    filteredQuizzes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+            }
+
+            // Display quizzes
+            filteredQuizzes.forEach(quiz => {
+                const quizCard = createQuizCard(quiz);
+                quizContainer.appendChild(quizCard);
+            });
+
+            if (filteredQuizzes.length === 0) {
+                quizContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">No quizzes found.</p>';
+            }
+        }
+
+        function createQuizCard(quiz) {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.innerHTML = `
+                <h3>${quiz.title}</h3>
+                <div class="quiz-info">${quiz.description || 'No description available'}</div>
+                <div class="quiz-creator">
+                    <div class="creator-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div>${quiz.creator}</div>
+                        <small>${quiz.creatorEmail}</small>
+                    </div>
+                </div>
+                <div class="quiz-stats">
+                    <span><i class="fas fa-users"></i> ${quiz.attempts} attempts</span>
+                    <span><i class="fas fa-clock"></i> ${quiz.duration} mins</span>
+                </div>
+                <button onclick="startQuiz('${quiz.id}')" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
+                    Start Quiz
+                </button>
+            `;
+            return card;
+        }
+
+        function getQuizzes() {
+            // This is a mock function - replace with actual API call
+            return [
+                {
+                    id: '1',
+                    title: 'JavaScript Basics',
+                    description: 'Test your knowledge of JavaScript fundamentals',
+                    creator: 'John Doe',
+                    creatorEmail: 'john@example.com',
+                    attempts: 150,
+                    duration: 30,
+                    createdAt: '2024-03-20'
+                },
+                // Add more mock quizzes as needed
+            ];
+        }
+
+        function startQuiz(quizId) {
+            // Store the selected quiz ID and redirect to the quiz page
+            localStorage.setItem('currentQuiz', quizId);
+            window.location.href = 'take-quiz.html';
+        }
+    </script>
+</body>
+</html> 

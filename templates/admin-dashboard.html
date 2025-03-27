@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Quiz Master</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            background: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-item {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--dark-color);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        
+        .dashboard h1 {
+            margin-top: 0;
+            color: var(--dark-color);
+            font-size: 28px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard h1 i {
+            color: var(--primary-color);
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card i {
+            font-size: 30px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .stat-card h3 {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            color: var(--secondary-color);
+        }
+        
+        .admin-actions {
+            margin-top: 40px;
+        }
+        
+        .admin-actions h2 {
+            color: var(--dark-color);
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-actions h2 i {
+            color: var(--primary-color);
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .action-card h3 {
+            margin-top: 0;
+            color: var(--dark-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .action-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .tech-quotes-section {
+            margin-top: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            padding: 30px;
+            color: white;
+        }
+        
+        .tech-quotes-section h2 {
+            margin-top: 0;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        
+        .quote-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .quote-card p {
+            font-style: italic;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .quote-card .author {
+            text-align: right;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--dark-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Quiz Master</span>
+            </div>
+            
+            <div class="header-nav">
+                <a href="#" class="nav-item active">Dashboard</a>
+                <a href="#" class="nav-item" id="createQuizBtn">Create Quiz</a>
+                <a href="#" class="nav-item">My Quizzes</a>
+            </div>
+            
+            <div class="header-buttons">
+                <div class="dropdown">
+                    <div class="user-avatar" id="userInitial">A</div>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard">
+            <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Total Users</h3>
+                    <p id="totalUsers">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Total Questions</h3>
+                    <p>0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Active Quizzes</h3>
+                    <p>0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Completed Quizzes</h3>
+                    <p>0</p>
+                </div>
+            </div>
+            
+            <div class="admin-actions">
+                <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                <div class="action-grid">
+                    <div class="action-card">
+                        <h3>Create New Quiz</h3>
+                        <p>Design a new quiz with custom questions and settings</p>
+                        <a href="#" class="btn btn-primary" id="createQuizAction"><i class="fas fa-plus"></i> Create Quiz</a>
+                    </div>
+                    <div class="action-card">
+                        <h3>Manage Users</h3>
+                        <p>View and manage user accounts and permissions</p>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-users-cog"></i> Manage Users</a>
+                    </div>
+                    <div class="action-card">
+                        <h3>View Reports</h3>
+                        <p>Check quiz statistics and performance reports</p>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-chart-bar"></i> View Reports</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-quotes-section">
+                <h2>Tech Inspiration</h2>
+                <div class="quote-card">
+                    <p>"Innovation distinguishes between a leader and a follower."</p>
+                    <div class="author">— Steve Jobs</div>
+                </div>
+                <div class="quote-card">
+                    <p>"The advance of technology is based on making it fit in so that you don't really even notice it, so it's part of everyday life."</p>
+                    <div class="author">— Bill Gates</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if admin is logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser || currentUser.role !== 'admin') {
+                alert('Please login as admin to access this page');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Display username initial in avatar
+            const userInitial = document.getElementById('userInitial');
+            userInitial.textContent = currentUser.username.charAt(0).toUpperCase();
+            
+            // Get total users
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            document.getElementById('totalUsers').textContent = users.length;
+        });
+        
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('currentUser');
+            window.location.href = '../index.html';
+        });
+        
+        // Handle create quiz button
+        document.getElementById('createQuizBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'create-quiz.html';
+        });
+        
+        document.getElementById('createQuizAction').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'create-quiz.html';
+        });
+    </script>
+</body>
+</html> 
